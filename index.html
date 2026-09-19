@@ -497,6 +497,131 @@ addButton.addEventListener("click", function () {
 });
 
 showTrades();
+<script>
+const tradeSection = document.querySelector(".trade-log-section");
+const inputs = tradeSection.querySelectorAll("input");
+const addButton = tradeSection.querySelector("button");
+
+const resultSelect = document.createElement("select");
+resultSelect.innerHTML = `
+  <option value="Pending">Result: Pending</option>
+  <option value="Win">Result: Win</option>
+  <option value="Loss">Result: Loss</option>
+  <option value="Break Even">Result: Break Even</option>
+`;
+
+resultSelect.style.cssText =
+  "padding:12px;border-radius:8px;border:1px solid #292a2e;background:#111214;color:#fff;";
+
+addButton.parentNode.insertBefore(resultSelect, addButton);
+
+const tradeList = document.createElement("div");
+tradeList.style.marginTop = "20px";
+tradeSection.querySelector(".card").appendChild(tradeList);
+
+let trades = JSON.parse(localStorage.getItem("eliteTrades")) || [];
+
+function calculateRR(trade) {
+  const entry = Number(trade.entry);
+  const sl = Number(trade.sl);
+  const tp = Number(trade.tp);
+
+  if (!entry || !sl || !tp) return "—";
+
+  let risk, reward;
+
+  if (trade.direction.toLowerCase() === "sell") {
+    risk = sl - entry;
+    reward = entry - tp;
+  } else {
+    risk = entry - sl;
+    reward = tp - entry;
+  }
+
+  if (risk <= 0 || reward <= 0) return "—";
+
+  return (reward / risk).toFixed(2);
+}
+
+function showTrades() {
+  tradeList.innerHTML = "";
+
+  trades.forEach((trade, index) => {
+    const item = document.createElement("div");
+
+    item.style.cssText =
+      "padding:16px;margin-top:10px;border:1px solid #292a2e;border-radius:10px;background:#111214;color:#fff;";
+
+    const result = trade.result || "Pending";
+    const rr = calculateRR(trade);
+
+    item.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <strong style="font-size:20px;">${trade.symbol}</strong>
+        <span style="color:#85878d;">${result}</span>
+      </div>
+
+      <div style="color:#85878d;margin-top:8px;">
+        ${trade.direction} · Entry: ${trade.entry}
+      </div>
+
+      <div style="color:#85878d;margin-top:5px;">
+        SL: ${trade.sl} · TP: ${trade.tp}
+      </div>
+
+      <div style="margin-top:8px;">
+        RR: <strong>1:${rr}</strong>
+      </div>
+
+      <button
+        onclick="deleteTrade(${index})"
+        style="margin-top:12px;padding:8px 12px;border:1px solid #292a2e;border-radius:7px;background:#18191c;color:#df7777;cursor:pointer;">
+        Delete
+      </button>
+    `;
+
+    tradeList.appendChild(item);
+  });
+}
+
+addButton.addEventListener("click", function () {
+  const symbol = inputs[0].value.trim();
+  const direction = inputs[1].value.trim();
+  const entry = inputs[2].value.trim();
+  const sl = inputs[3].value.trim();
+  const tp = inputs[4].value.trim();
+
+  if (!symbol || !direction || !entry || !sl || !tp) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  const trade = {
+    symbol,
+    direction,
+    entry,
+    sl,
+    tp,
+    result: resultSelect.value
+  };
+
+  trades.push(trade);
+
+  localStorage.setItem("eliteTrades", JSON.stringify(trades));
+
+  inputs.forEach(input => input.value = "");
+  resultSelect.value = "Pending";
+
+  showTrades();
+});
+
+function deleteTrade(index) {
+  trades.splice(index, 1);
+  localStorage.setItem("eliteTrades", JSON.stringify(trades));
+  showTrades();
+}
+
+showTrades();
 </script>
 </body>
 </html>
