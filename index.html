@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ELITE JOURNAL</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+      background: #111214;
+      color: #f1f1f1;
+      min-height: 100vh;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px;
+      background: #17181b;
+      border-right: 1px solid #292a2e;
+      padding: 28px 16px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .logo {
+      padding: 0 14px 30px;
+    }
+
+    .logo h1 {
+      font-size: 20px;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+
+    .logo span {
+      display: block;
+      color: #85878d;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      margin-top: 5px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav button {
+      border: none;
+      background: transparent;
+      color: #8f9197;
+      text-align: left;
+      padding: 13px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #222327;
+      color: #ffffff;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 240px;
+      width: calc(100% - 240px);
+      padding: 34px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .topbar h2 {
+      font-size: 26px;
+      font-weight: 650;
+    }
+
+    .topbar p {
+      color: #85878d;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .profile {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #25262a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #bfc0c4;
+      font-size: 14px;
+    }
+
+    /* STATS */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: #18191c;
+      border: 1px solid #292a2e;
+      border-radius: 13px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: #85878d;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 25px;
+      font-weight: 650;
+    }
+
+    .positive {
+      color: #73c98b;
+    }
+
+    .negative {
+      color: #df7777;
+    }
+
+    /* CONTENT */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .card-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .card-header span {
+      color: #777980;
+      font-size: 11px;
+    }
+
+    /* CHART */
+    .chart {
+      height: 240px;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding-top: 20px;
+    }
+
+    .bar {
+      flex: 1;
+      background: #45474d;
+      border-radius: 4px 4px 0 0;
+      opacity: 0.8;
+    }
+
+    .bar.green {
+      background: #628c6d;
+    }
+
+    .bar.red {
+      background: #995f5f;
+    }
+
+    /* TRADES */
+    .trade {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid #292a2e;
+    }
+
+    .trade:last-child {
+      border-bottom: none;
+    }
+
+    .trade-symbol {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .trade-info {
+      color: #777980;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .trade-result {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 190px;
+      }
+
+      .main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+        padding: 24px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #292a2e;
+      }
+
+      .app {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="logo">
+        <h1>ELITE JOURNAL</h1>
+        <span>TRADING PERFORMANCE</span>
+      </div>
+
+      <nav class="nav">
+        <button class="active">Dashboard</button>
+        <button>Trade Log</button>
+        <button>Analytics</button>
+        <button>Calendar</button>
+        <button>Psychology</button>
+        <button>Insights</button>
+        <button>Settings</button>
+      </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <div class="topbar">
+        <div>
+          <h2>Dashboard</h2>
+          <p>Your trading performance at a glance.</p>
+        </div>
+
+        <div class="profile">EA</div>
+      </div>
+
+
+      <!-- STATS -->
+      <section class="stats">
+
+        <div class="card">
+          <div class="stat-label">TOTAL TRADES</div>
+          <div class="stat-value">0</div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">WIN RATE</div>
+          <div class="stat-value">0%</div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">PROFIT / LOSS</div>
+          <div class="stat-value positive">$0.00</div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">AVERAGE RR</div>
+          <div class="stat-value">0.00R</div>
+        </div>
+
+      </section>
+
+
+      <!-- CONTENT -->
+      <section class="content-grid">
+
+        <!-- EQUITY -->
+        <div class="card">
+
+          <div class="card-header">
+            <h3>Equity Overview</h3>
+            <span>LAST 30 DAYS</span>
+          </div>
+
+          <div class="chart">
+            <div class="bar" style="height: 30%"></div>
+            <div class="bar" style="height: 42%"></div>
+            <div class="bar green" style="height: 55%"></div>
+            <div class="bar green" style="height: 68%"></div>
+            <div class="bar red" style="height: 48%"></div>
+            <div class="bar green" style="height: 74%"></div>
+            <div class="bar green" style="height: 82%"></div>
+            <div class="bar" style="height: 77%"></div>
+            <div class="bar green" style="height: 92%"></div>
+            <div class="bar green" style="height: 96%"></div>
+          </div>
+
+        </div>
+
+
+        <!-- RECENT TRADES -->
+        <div class="card">
+
+          <div class="card-header">
+            <h3>Recent Trades</h3>
+            <span>VIEW ALL</span>
+          </div>
+
+          <div class="trade">
+            <div>
+              <div class="trade-symbol">No trades yet</div>
+              <div class="trade-info">Your trades will appear here</div>
+            </div>
+
+            <div class="trade-result">—</div>
+          </div>
+
+          <div class="trade">
+            <div>
+              <div class="trade-symbol">Start your journal</div>
+              <div class="trade-info">Add your first trade</div>
+            </div>
+
+            <div class="trade-result">+</div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
