@@ -696,7 +696,7 @@ button{font:inherit}
 
 <div class="section-head">
   <h2>Trade Log</h2>
-  <button class="btn primary" onclick="alert('Trade entry form will be connected to Supabase next.')">+ Add Trade</button>
+  <button class="btn primary" onclick="openTradeForm()">+ Add Trade</button>
 </div>
 
 <div class="grid stats">
@@ -965,7 +965,60 @@ Bad timing is currently responsible for the recorded loss. Continue tagging exec
 </div>
 
 </section>
+<div id="tradeModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);z-index:100;align-items:center;justify-content:center;padding:20px;">
+  <div class="card" style="width:100%;max-width:520px;">
+    <div class="section-head">
+      <h2>Add Trade</h2>
+      <button class="btn" onclick="closeTradeForm()">✕</button>
+    </div>
 
+    <div class="field">
+      <label>INSTRUMENT</label>
+      <input id="tradeInstrument" placeholder="EURUSD">
+    </div>
+
+    <div class="field">
+      <label>DIRECTION</label>
+      <select id="tradeDirection">
+        <option>BUY</option>
+        <option>SELL</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>SESSION</label>
+      <select id="tradeSession">
+        <option>London</option>
+        <option>New York</option>
+        <option>Asia</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>P&L ($)</label>
+      <input id="tradePnl" type="number" placeholder="-116">
+    </div>
+
+    <div class="field">
+      <label>RR</label>
+      <input id="tradeRR" type="number" step="0.01" placeholder="2.00">
+    </div>
+
+    <div class="field">
+      <label>RESULT</label>
+      <select id="tradeResult">
+        <option>Win</option>
+        <option>Loss</option>
+        <option>Break Even</option>
+      </select>
+    </div>
+
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px;">
+      <button class="btn" onclick="closeTradeForm()">Cancel</button>
+      <button class="btn primary" onclick="saveTrade()">Save Trade</button>
+    </div>
+  </div>
+</div>
 </main>
 
 <script>
@@ -1001,6 +1054,40 @@ function showPage(id,button){
 
 function logout(){
   alert('Logout will be connected to Supabase Authentication.');
+}
+  function openTradeForm(){
+  document.getElementById('tradeModal').style.display='flex';
+}
+
+function closeTradeForm(){
+  document.getElementById('tradeModal').style.display='none';
+}
+
+function saveTrade(){
+  const instrument = document.getElementById('tradeInstrument').value.trim();
+  const pnl = document.getElementById('tradePnl').value;
+  const rr = document.getElementById('tradeRR').value;
+
+  if(!instrument || pnl === '' || rr === ''){
+    alert('Please fill Instrument, P&L and RR.');
+    return;
+  }
+
+  const trade = {
+    instrument: instrument,
+    direction: document.getElementById('tradeDirection').value,
+    session: document.getElementById('tradeSession').value,
+    pnl: Number(pnl),
+    rr: Number(rr),
+    result: document.getElementById('tradeResult').value
+  };
+
+  const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
+  trades.push(trade);
+  localStorage.setItem('eliteTrades', JSON.stringify(trades));
+
+  closeTradeForm();
+  alert('Trade saved successfully!');
 }
 </script>
 
