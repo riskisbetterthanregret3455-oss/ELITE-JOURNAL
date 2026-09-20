@@ -1227,6 +1227,21 @@ updateTradeStats();
     weeklyStats.textContent =
       `${winRate.toFixed(0)}% win rate · ${total} trade${total === 1 ? '' : 's'}`;
   }
+    const lossStreakEl = document.getElementById('lossStreak');
+
+  if (lossStreakEl) {
+    let streak = 0;
+
+    for (let i = trades.length - 1; i >= 0; i--) {
+      if (trades[i].result === 'Loss') {
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    lossStreakEl.textContent = streak;
+  }
 }
 
 updateDashboard();
