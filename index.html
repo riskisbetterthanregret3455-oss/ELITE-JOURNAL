@@ -1097,7 +1097,7 @@ function saveTrade(){
 
   table.innerHTML = '';
 
-  trades.forEach((trade, index) => {
+  trades.forEach((trade,index)=>{
     const pnlClass = trade.pnl >= 0 ? 'green' : 'loss';
     const resultClass = trade.result === 'Loss' ? 'loss' : 'green';
 
@@ -1117,8 +1117,8 @@ function saveTrade(){
 
 function deleteTrade(index){
   const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
-  trades.splice(index, 1);
-  localStorage.setItem('eliteTrades', JSON.stringify(trades));
+  trades.splice(index,1);
+  localStorage.setItem('eliteTrades',JSON.stringify(trades));
   loadTrades();
 }
 
