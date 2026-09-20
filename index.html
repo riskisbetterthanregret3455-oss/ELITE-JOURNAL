@@ -793,9 +793,11 @@ button{font:inherit}
 <div class="section-head">
   <h2>Calendar</h2>
   <div class="segment">
-    <button class="active">Monthly</button>
-    <button>Weekly</button>
-    <button>Daily</button>
+    <div class="segment">
+  <button class="active" onclick="setCalendarView('monthly', this)">Monthly</button>
+  <button onclick="setCalendarView('weekly', this)">Weekly</button>
+  <button onclick="setCalendarView('daily', this)">Daily</button>
+    </div>
   </div>
 </div>
 
