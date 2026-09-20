@@ -1368,7 +1368,38 @@ updateDailyPnlChart();
   }
 
   html += `</div>`;
+ const profit = trades
+  .filter(t => Number(t.pnl) > 0)
+  .reduce((sum,t) => sum + Number(t.pnl), 0);
 
+const loss = Math.abs(
+  trades
+    .filter(t => Number(t.pnl) < 0)
+    .reduce((sum,t) => sum + Number(t.pnl), 0)
+);
+
+const net = profit - loss;
+
+html = `
+  <div class="grid three" style="margin-bottom:14px;">
+    <div>
+      <div class="stat-label">PROFIT</div>
+      <div class="stat-value green">$${profit.toFixed(0)}</div>
+    </div>
+
+    <div>
+      <div class="stat-label">LOSS</div>
+      <div class="stat-value red">$${loss.toFixed(0)}</div>
+    </div>
+
+    <div>
+      <div class="stat-label">NET P&L</div>
+      <div class="stat-value ${net >= 0 ? 'green' : 'red'}">
+        ${net >= 0 ? '$' : '-$'}${Math.abs(net).toFixed(0)}
+      </div>
+    </div>
+  </div>
+` + html;
   calendar.innerHTML = html;
 }
 
