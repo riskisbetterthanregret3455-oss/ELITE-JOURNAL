@@ -699,12 +699,31 @@ button{font:inherit}
   <button class="btn primary" onclick="openTradeForm()">+ Add Trade</button>
 </div>
 
-<div class="grid stats">
-  <div class="card"><div class="stat-label">TRADES</div><div class="stat-value">1</div></div>
-  <div class="card"><div class="stat-label">NET P&L</div><div class="stat-value red">-$116</div></div>
-  <div class="card"><div class="stat-label">WIN RATE</div><div class="stat-value">0%</div></div>
-  <div class="card"><div class="stat-label">W / L / B/E</div><div class="stat-value">0 / 1 / 0</div></div>
-  <div class="card"><div class="stat-label">AVG RR</div><div class="stat-value">2.00</div></div>
+ <div class="grid stats">
+  <div class="card">
+    <div class="stat-label">TRADES</div>
+    <div class="stat-value" id="statTrades">0</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">NET P&L</div>
+    <div class="stat-value" id="statPnl">$0</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">WIN RATE</div>
+    <div class="stat-value" id="statWinRate">0%</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">W / L / B/E</div>
+    <div class="stat-value" id="statWlb">0 / 0 / 0</div>
+  </div>
+
+  <div class="card">
+    <div class="stat-label">AVG RR</div>
+    <div class="stat-value" id="statAvgRR">0.00</div>
+  </div>
 </div>
 
 <div class="card" style="margin-top:14px">
