@@ -1209,8 +1209,8 @@ updateTradeStats();
   cards[3].querySelector('.stat-value').textContent =
     `${winRate.toFixed(0)}%`;
 
-  cards[4].querySelector('.stat-value').textContent =
-    `$${avgWin.toFixed(0)} / $${avgLoss.toFixed(0)}`;
+  cards[4].querySelector('.stat-value').innerHTML =
+  `<span class="green">$${avgWin.toFixed(0)}</span> / <span class="red">$${avgLoss.toFixed(0)}</span>`;
 }
 
 updateDashboard();
