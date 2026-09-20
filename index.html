@@ -1666,45 +1666,116 @@ updateMainCalendar();
 
   if(view === 'weekly'){
 
-    const weeklyTrades = trades.filter(trade => {
+  const weeklyTrades = trades.filter(trade => {
 
-      if(!trade.date) return false;
+    if(!trade.date) return false;
 
-      const date = new Date(trade.date);
+    const date = new Date(trade.date);
 
-      return (
-        date.getFullYear() === 2026 &&
-        date.getMonth() === 8 &&
-        date.getDate() >= 13 &&
-        date.getDate() <= 19
-      );
+    return (
+      date.getFullYear() === 2026 &&
+      date.getMonth() === 8 &&
+      date.getDate() >= 13 &&
+      date.getDate() <= 19
+    );
+  });
+
+  const days = [
+    {name:'SUN', date:13},
+    {name:'MON', date:14},
+    {name:'TUE', date:15},
+    {name:'WED', date:16},
+    {name:'THU', date:17},
+    {name:'FRI', date:18},
+    {name:'SAT', date:19}
+  ];
+
+  let html = `
+    <div style="
+      grid-column:1/-1;
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:8px;
+    ">
+  `;
+
+  days.forEach(day => {
+
+    const dayTrades = weeklyTrades.filter(trade => {
+      return new Date(trade.date).getDate() === day.date;
     });
 
-    let html = '';
+    const pnl = dayTrades.reduce(
+      (sum, trade) => sum + Number(trade.pnl || 0),
+      0
+    );
 
-    for(let day = 13; day <= 19; day++){
+    const bg =
+      pnl > 0
+        ? 'rgba(57,217,138,.08)'
+        : pnl < 0
+        ? 'rgba(255,93,104,.08)'
+        : '#10141a';
 
-      const dayTrades = weeklyTrades.filter(trade => {
-        return new Date(trade.date).getDate() === day;
-      });
+    const border =
+      pnl > 0
+        ? 'rgba(57,217,138,.25)'
+        : pnl < 0
+        ? 'rgba(255,93,104,.25)'
+        : '#1b2027';
 
-      const pnl = dayTrades.reduce(
-        (sum, trade) => sum + Number(trade.pnl || 0),
-        0
-      );
+    html += `
+      <div style="
+        min-height:150px;
+        background:${bg};
+        border:1px solid ${border};
+        border-radius:10px;
+        padding:12px;
+      ">
 
-      html += `
-        <div class="day ${pnl < 0 ? 'loss-day' : ''}">
-          <strong>${day} Sep</strong>
-          <small class="${pnl >= 0 ? 'green' : 'red'}">
-            ${pnl >= 0 ? '+' : '-'}$${Math.abs(pnl).toFixed(0)}
-          </small>
+        <div style="
+          color:#626b76;
+          font-size:9px;
+          letter-spacing:1px;
+          font-weight:600;
+        ">
+          ${day.name}
         </div>
-      `;
-    }
 
-    calendar.innerHTML = html;
-    return;
+        <div style="
+          font-size:18px;
+          font-weight:600;
+          margin-top:8px;
+        ">
+          ${day.date}
+        </div>
+
+        <div style="
+          margin-top:25px;
+          font-size:18px;
+          font-weight:600;
+          color:${pnl > 0 ? 'var(--green)' : pnl < 0 ? 'var(--red)' : '#858d99'};
+        ">
+          ${pnl > 0 ? '+' : pnl < 0 ? '-$' : '$'}${Math.abs(pnl).toFixed(0)}
+        </div>
+
+        <div style="
+          margin-top:7px;
+          color:#626a75;
+          font-size:10px;
+        ">
+          ${dayTrades.length} trade${dayTrades.length === 1 ? '' : 's'}
+        </div>
+
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  calendar.innerHTML = html;
+  return;
+}
   }
 
   if(view === 'daily'){
