@@ -791,49 +791,68 @@ button{font:inherit}
 <section id="calendar" class="content page hidden">
 
 <div class="section-head">
-<h2>Calendar</h2>
-<div class="segment">
-<button class="active">Monthly</button>
-<button>Weekly</button>
-<button>Daily</button>
-</div>
+  <h2>Calendar</h2>
+  <div class="segment">
+    <button class="active">Monthly</button>
+    <button>Weekly</button>
+    <button>Daily</button>
+  </div>
 </div>
 
 <div class="calendar">
 
-<div class="card">
-<h2 style="font-size:15px">September 2026</h2>
+  <div class="card">
+    <div class="section-head">
+      <h2 style="font-size:15px">September 2026</h2>
+      <span id="calendarMonthStats">Trading activity</span>
+    </div>
 
-<div class="calendar-box">
-<div class="day-name">MON</div><div class="day-name">TUE</div><div class="day-name">WED</div><div class="day-name">THU</div><div class="day-name">FRI</div><div class="day-name">SAT</div><div class="day-name">SUN</div>
+    <div class="calendar-box" id="mainCalendar"></div>
+  </div>
 
-<div class="day"></div><div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div>
-<div class="day">7</div><div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div>
-<div class="day loss-day"><strong>13</strong><small>-$116</small></div>
-<div class="day">14</div><div class="day">15</div><div class="day">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div><div class="day">20</div>
-</div>
-</div>
+  <div class="card">
+    <div class="section-head">
+      <h2 style="font-size:14px">13–19 September</h2>
+      <span>Weekly summary</span>
+    </div>
 
-<div class="card">
-<h2 style="font-size:14px">13–19 September</h2>
-<div style="margin-top:25px">
-<div class="stat-label">WEEKLY P&L</div>
-<div class="stat-value red">-$116</div>
-<div class="stat-bottom">0% win rate · 1 trade</div>
-</div>
-</div>
+    <div style="margin-top:25px">
+
+      <div class="stat-label">WEEKLY P&L</div>
+      <div class="stat-value" id="calendarWeeklyPnl">$0</div>
+
+      <div class="stat-bottom" id="calendarWeeklyStats">
+        0% win rate · 0 trades
+      </div>
+
+      <div style="margin-top:28px">
+
+        <div class="stat-label">TRADES</div>
+        <div class="stat-value" id="calendarWeeklyTrades">0</div>
+
+      </div>
+
+      <div style="margin-top:22px">
+
+        <div class="stat-label">WIN / LOSS</div>
+        <div class="stat-value" id="calendarWeeklyWL">0 / 0</div>
+
+      </div>
+
+    </div>
+  </div>
 
 </div>
 
 <div class="card" style="margin-top:14px">
-<div class="section-head"><h2>Activity Heatmap</h2><span>Trading activity</span></div>
-<div class="heatmap">
-<script>
-for(let i=0;i<84;i++){
-document.write(`<div class="heat ${i===62?'c':i%9===0?'b':''}"></div>`);
-}
-</script>
-</div>
+
+  <div class="section-head">
+    <h2>Activity Heatmap</h2>
+    <span>Trading activity</span>
+  </div>
+
+  <div class="heatmap" id="calendarHeatmap"></div>
+
 </div>
 
 </section>
