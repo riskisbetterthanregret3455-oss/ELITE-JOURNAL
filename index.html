@@ -1081,13 +1081,14 @@ function saveTrade(){
   }
 
   const trade = {
-    instrument: instrument,
-    direction: document.getElementById('tradeDirection').value,
-    session: document.getElementById('tradeSession').value,
-    pnl: Number(pnl),
-    rr: Number(rr),
-    result: document.getElementById('tradeResult').value
-  };
+  instrument: instrument,
+  direction: document.getElementById('tradeDirection').value,
+  session: document.getElementById('tradeSession').value,
+  pnl: Number(pnl),
+  rr: Number(rr),
+  result: document.getElementById('tradeResult').value,
+  date: new Date().toISOString()
+};
 
   const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
   trades.push(trade);
