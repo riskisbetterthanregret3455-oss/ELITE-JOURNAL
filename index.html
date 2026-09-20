@@ -1644,6 +1644,108 @@ updateDashboardCalendar();
 }
 
 updateMainCalendar();
+  function setCalendarView(view, button){
+
+  document.querySelectorAll('#calendar .segment button')
+    .forEach(btn => btn.classList.remove('active'));
+
+  button.classList.add('active');
+
+  const calendar = document.getElementById('mainCalendar');
+
+  if(!calendar) return;
+
+  const trades = JSON.parse(
+    localStorage.getItem('eliteTrades') || '[]'
+  );
+
+  if(view === 'monthly'){
+    updateMainCalendar();
+    return;
+  }
+
+  if(view === 'weekly'){
+
+    const weeklyTrades = trades.filter(trade => {
+
+      if(!trade.date) return false;
+
+      const date = new Date(trade.date);
+
+      return (
+        date.getFullYear() === 2026 &&
+        date.getMonth() === 8 &&
+        date.getDate() >= 13 &&
+        date.getDate() <= 19
+      );
+    });
+
+    let html = '';
+
+    for(let day = 13; day <= 19; day++){
+
+      const dayTrades = weeklyTrades.filter(trade => {
+        return new Date(trade.date).getDate() === day;
+      });
+
+      const pnl = dayTrades.reduce(
+        (sum, trade) => sum + Number(trade.pnl || 0),
+        0
+      );
+
+      html += `
+        <div class="day ${pnl < 0 ? 'loss-day' : ''}">
+          <strong>${day} Sep</strong>
+          <small class="${pnl >= 0 ? 'green' : 'red'}">
+            ${pnl >= 0 ? '+' : '-'}$${Math.abs(pnl).toFixed(0)}
+          </small>
+        </div>
+      `;
+    }
+
+    calendar.innerHTML = html;
+    return;
+  }
+
+  if(view === 'daily'){
+
+    if(!trades.length){
+
+      calendar.innerHTML = `
+        <div style="grid-column:1/-1;padding:25px;color:#858d99;font-size:12px;">
+          No trades recorded yet.
+        </div>
+      `;
+
+      return;
+    }
+
+    let html = '';
+
+    trades.slice().reverse().forEach(trade => {
+
+      const date = trade.date
+        ? new Date(trade.date).toLocaleDateString()
+        : 'Unknown';
+
+      const pnl = Number(trade.pnl || 0);
+
+      html += `
+        <div class="day ${pnl < 0 ? 'loss-day' : ''}" style="grid-column:span 2;">
+          <strong>${date}</strong>
+          <div style="margin-top:8px;">
+            <b>${trade.instrument || 'Trade'}</b>
+          </div>
+          <small class="${pnl >= 0 ? 'green' : 'red'}">
+            ${pnl >= 0 ? '+' : '-'}$${Math.abs(pnl).toFixed(0)}
+          </small>
+        </div>
+      `;
+    });
+
+    calendar.innerHTML = html;
+  }
+}
 </script>
 
 </body>
