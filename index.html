@@ -1,1 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELITE JOURNAL — Trading Journal</title>
 
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#080a0d;
+  --panel:#0e1116;
+  --panel2:#12161c;
+  --border:#20252d;
+  --text:#f4f5f7;
+  --muted:#858d99;
+  --green:#39d98a;
+  --red:#ff5d68;
+  --blue:#6d8cff;
+  --gold:#e7c66a;
+}
+
+body{
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+button{font:inherit}
+.hidden{display:none!important}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  width:245px;
+  height:100vh;
+  background:#0a0c10;
+  border-right:1px solid var(--border);
+  padding:24px 15px;
+  z-index:20;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:5px 12px 28px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  font-size:15px;
+}
+
+.logo-mark{
+  width:31px;
+  height:31px;
+  border:1px solid #3b414b;
+  border-radius:9px;
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  color:var(--gold);
+}
+
+.nav-title{
+  color:#555d68;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  padding:12px 12px 9px;
+}
+
+.nav button{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#8d95a1;
+  padding:11px 12px;
+  margin:2px 0;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  text-align:left;
+  font-size:13px;
+  transition:.2s;
+}
+
+.nav button:hover,
+.nav button.active{
+  color:white;
+  background:#15191f;
+}
+
+.nav button.active{
+  box-shadow:inset 2px 0 var(--gold);
+}
+
+.icon{
+  width:18px;
+  text-align:center;
+  opacity:.9;
+}
+
+/* MAIN */
+.main{
+  margin-left:245px;
+  min-height:100vh;
+}
+
+.topbar{
+  height:70px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  background:rgba(8,10,13,.92);
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(12px);
+}
+
+.page-title{
+  font-size:17px;
+  font-weight:600;
+}
+
+.top-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#191d24;
+  border:1px solid #2c333d;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+}
+
+.content{
+  padding:28px 30px 50px;
+  max-width:1500px;
+}
+
+/* COMMON */
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.section-head h2{
+  font-size:14px;
+  font-weight:600;
+}
+
+.section-head span{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.grid{
+  display:grid;
+  gap:14px;
+}
+
+.stats{
+  grid-template-columns:repeat(5,1fr);
+}
+
+.card{
+  background:linear-gradient(145deg,#11151b,#0d1015);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:11px;
+  margin-bottom:11px;
+}
+
+.stat-value{
+  font-size:24px;
+  font-weight:600;
+  letter-spacing:-.5px;
+}
+
+.green{color:var(--green)}
+.red{color:var(--red)}
+.gold{color:var(--gold)}
+
+.stat-bottom{
+  margin-top:10px;
+  color:#66707c;
+  font-size:10px;
+}
+
+.two{
+  grid-template-columns:1.5fr 1fr;
+  margin-top:14px;
+}
+
+.three{
+  grid-template-columns:repeat(3,1fr);
+  margin-top:14px;
+}
+
+.chart{
+  height:250px;
+  position:relative;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.chart-grid{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(to bottom,transparent 24%,#1b2027 25%,transparent 26%,transparent 49%,#1b2027 50%,transparent 51%,transparent 74%,#1b2027 75%,transparent 76%);
+}
+
+.line{
+  position:absolute;
+  left:0;
+  right:0;
+  top:55%;
+  height:100px;
+}
+
+.line svg{
+  width:100%;
+  height:100%;
+}
+
+.chart-labels{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  color:#59616c;
+  font-size:9px;
+}
+
+/* THUNDER */
+.thunder{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.score{
+  font-size:48px;
+  font-weight:700;
+  margin:8px 0;
+}
+
+.progress{
+  height:5px;
+  border-radius:5px;
+  background:#20252d;
+  overflow:hidden;
+  margin-top:9px;
+}
+
+.progress i{
+  display:block;
+  height:100%;
+  width:72%;
+  background:var(--gold);
+}
+
+.metric{
+  margin-bottom:13px;
+}
+
+.metric-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:#9ba2ad;
+}
+
+/* TABLE */
+.table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.table th{
+  text-align:left;
+  color:#646d78;
+  font-size:10px;
+  font-weight:500;
+  padding:12px 10px;
+  border-bottom:1px solid var(--border);
+}
+
+.table td{
+  padding:15px 10px;
+  border-bottom:1px solid #181c22;
+  font-size:12px;
+}
+
+.table tr:hover td{
+  background:#11151a;
+}
+
+.badge{
+  padding:5px 8px;
+  border-radius:6px;
+  font-size:10px;
+  background:#191d23;
+  color:#aeb5bf;
+}
+
+.loss{
+  color:var(--red);
+}
+
+/* CALENDAR */
+.calendar{
+  display:grid;
+  grid-template-columns:1.4fr .6fr;
+  gap:14px;
+}
+
+.calendar-box{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:5px;
+  margin-top:15px;
+}
+
+.day-name{
+  color:#626b76;
+  font-size:9px;
+  padding:5px;
+}
+
+.day{
+  min-height:62px;
+  background:#10141a;
+  border:1px solid #1b2027;
+  border-radius:7px;
+  padding:8px;
+  font-size:10px;
+}
+
+.day.loss-day{
+  border-color:rgba(255,93,104,.28);
+  background:rgba(255,93,104,.05);
+}
+
+.day strong{
+  display:block;
+  font-size:10px;
+  margin-bottom:10px;
+}
+
+.day small{color:var(--red)}
+
+/* HEATMAP */
+.heatmap{
+  display:grid;
+  grid-template-columns:repeat(14,1fr);
+  gap:4px;
+  margin-top:16px;
+}
+
+.heat{
+  height:15px;
+  border-radius:3px;
+  background:#151a20;
+}
+
+.heat.a{background:#252b33}
+.heat.b{background:#3c3430}
+.heat.c{background:#70513f}
+
+/* SETTINGS */
+.form{
+  max-width:650px;
+}
+
+.field{
+  margin-bottom:20px;
+}
+
+.field label{
+  display:block;
+  color:#858e99;
+  font-size:11px;
+  margin-bottom:8px;
+}
+
+.field input,
+.field select{
+  width:100%;
+  background:#0a0d11;
+  border:1px solid var(--border);
+  color:white;
+  border-radius:8px;
+  padding:12px;
+  outline:none;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:#3b424d;
+}
+
+.segment{
+  display:flex;
+  gap:7px;
+}
+
+.segment button{
+  border:1px solid var(--border);
+  background:#0d1014;
+  color:#8d95a0;
+  padding:9px 14px;
+  border-radius:7px;
+  cursor:pointer;
+}
+
+.segment button.active{
+  background:#1b1f26;
+  color:white;
+  border-color:#3c424c;
+}
+
+.btn{
+  border:1px solid var(--border);
+  background:#15191f;
+  color:white;
+  border-radius:7px;
+  padding:10px 16px;
+  cursor:pointer;
+}
+
+.btn.primary{
+  background:#eee9dc;
+  color:#101216;
+  border:0;
+  font-weight:600;
+}
+
+/* MOBILE */
+@media(max-width:1000px){
+  .sidebar{
+    width:75px;
+    padding:20px 9px;
+  }
+  .logo span,
+  .nav-title,
+  .nav button span{
+    display:none;
+  }
+  .nav button{
+    justify-content:center;
+  }
+  .main{margin-left:75px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .two,.three,.calendar{grid-template-columns:1fr}
+}
+
+@media(max-width:650px){
+  .topbar{padding:0 16px}
+  .content{padding:20px 15px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat-value{font-size:20px}
+  .calendar-box{grid-template-columns:repeat(7,1fr)}
+  .day{min-height:48px;padding:5px}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">E</div>
+    <span>ELITE JOURNAL</span>
+  </div>
+
+  <div class="nav-title">WORKSPACE</div>
+
+  <nav class="nav">
+    <button class="active" onclick="showPage('dashboard',this)">
+      <b class="icon">⌂</b><span>Dashboard</span>
+    </button>
+    <button onclick="showPage('trades',this)">
+      <b class="icon">▤</b><span>Trade Log</span>
+    </button>
+    <button onclick="showPage('analytics',this)">
+      <b class="icon">◩</b><span>Analytics</span>
+    </button>
+    <button onclick="showPage('calendar',this)">
+      <b class="icon">□</b><span>Calendar</span>
+    </button>
+    <button onclick="showPage('psychology',this)">
+      <b class="icon">◉</b><span>Psychology</span>
+    </button>
+    <button onclick="showPage('insights',this)">
+      <b class="icon">✦</b><span>Insights</span>
+    </button>
+    <button onclick="showPage('news',this)">
+      <b class="icon">◫</b><span>News</span>
+    </button>
+
+    <div class="nav-title">SYSTEM</div>
+
+    <button onclick="showPage('rules',this)">
+      <b class="icon">✓</b><span>Rules</span>
+    </button>
+    <button onclick="showPage('settings',this)">
+      <b class="icon">⚙</b><span>Settings</span>
+    </button>
+    <button onclick="logout()">
+      <b class="icon">↪</b><span>Logout</span>
+    </button>
+  </nav>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+  <div class="page-title" id="pageTitle">Dashboard</div>
+  <div class="top-actions">
+    <div class="avatar">MS</div>
+  </div>
+</header>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="content page">
+
+<div class="section-head">
+  <h2>Performance Overview</h2>
+  <span>September 2026</span>
+</div>
+
+<div class="grid stats">
+
+<div class="card">
+  <div class="stat-label">NET P&L</div>
+  <div class="stat-value red">-$116.00</div>
+  <div class="stat-bottom">1 trade</div>
+</div>
+
+<div class="card">
+  <div class="stat-label">TRADE WIN %</div>
+  <div class="stat-value">0%</div>
+  <div class="stat-bottom">0 wins / 1 loss</div>
+</div>
+
+<div class="card">
+  <div class="stat-label">PROFIT FACTOR</div>
+  <div class="stat-value">0.00</div>
+  <div class="stat-bottom">Gross profit / loss</div>
+</div>
+
+<div class="card">
+  <div class="stat-label">DAY WIN %</div>
+  <div class="stat-value">0%</div>
+  <div class="stat-bottom">Best: —</div>
+</div>
+
+<div class="card">
+  <div class="stat-label">AVG WIN / LOSS</div>
+  <div class="stat-value red">$-116</div>
+  <div class="stat-bottom">Average loss</div>
+</div>
+
+</div>
+
+<div class="grid two">
+
+<div class="card">
+  <div class="section-head">
+    <h2>Cumulative P&L</h2>
+    <span>Equity progression</span>
+  </div>
+  <div class="chart">
+    <div class="chart-grid"></div>
+    <div class="line">
+      <svg viewBox="0 0 700 150" preserveAspectRatio="none">
+        <polyline
+          points="0,55 130,55 260,58 390,63 510,82 700,120"
+          fill="none"
+          stroke="#ff5d68"
+          stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="chart-labels">
+      <span>Sep 13</span><span>Sep 15</span><span>Sep 17</span><span>Sep 19</span>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <h2>Weekly P&L</h2>
+    <span>13–19 Sep</span>
+  </div>
+  <div class="stat-value red">-$116</div>
+  <div class="stat-bottom">0% win rate · 1 trade</div>
+  <div style="margin-top:35px;color:#626a75;font-size:11px">
+    Loss streak
+  </div>
+  <div style="font-size:30px;margin-top:5px;color:var(--red)">1</div>
+</div>
+
+</div>
+
+<div class="grid two">
+
+<div class="card">
+  <div class="section-head">
+    <h2>Daily P&L</h2>
+    <span>September</span>
+  </div>
+  <div class="chart">
+    <div class="chart-grid"></div>
+    <div style="position:absolute;left:15%;bottom:30px;width:13%;height:90px;background:rgba(255,93,104,.45);border-radius:5px 5px 0 0"></div>
+    <div class="chart-labels">
+      <span>Sep 1</span><span>Sep 7</span><span>Sep 14</span><span>Sep 19</span><span>Sep 30</span>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-head">
+    <h2>Thunder Score</h2>
+    <span>Performance quality</span>
+  </div>
+
+  <div class="thunder">
+    <div>
+      <div class="score">24</div>
+      <div class="stat-bottom">Current score</div>
+    </div>
+    <div>
+      <div class="metric">
+        <div class="metric-row"><span>Win %</span><b>0%</b></div>
+        <div class="progress"><i style="width:5%"></i></div>
+      </div>
+      <div class="metric">
+        <div class="metric-row"><span>Profit Factor</span><b>0.0</b></div>
+        <div class="progress"><i style="width:10%"></i></div>
+      </div>
+      <div class="metric">
+        <div class="metric-row"><span>Consistency</span><b>35%</b></div>
+        <div class="progress"><i style="width:35%"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:14px">
+  <div class="section-head">
+    <h2>September 2026</h2>
+    <span>Monthly summary</span>
+  </div>
+  <div class="grid three">
+    <div><div class="stat-label">PROFIT</div><div class="stat-value green">$0</div></div>
+    <div><div class="stat-label">LOSS</div><div class="stat-value red">$116</div></div>
+    <div><div class="stat-label">TRADES</div><div class="stat-value">1</div></div>
+  </div>
+</div>
+
+</section>
+
+
+<!-- TRADE LOG -->
+<section id="trades" class="content page hidden">
+
+<div class="section-head">
+  <h2>Trade Log</h2>
+  <button class="btn primary" onclick="alert('Trade entry form will be connected to Supabase next.')">+ Add Trade</button>
+</div>
+
+<div class="grid stats">
+  <div class="card"><div class="stat-label">TRADES</div><div class="stat-value">1</div></div>
+  <div class="card"><div class="stat-label">NET P&L</div><div class="stat-value red">-$116</div></div>
+  <div class="card"><div class="stat-label">WIN RATE</div><div class="stat-value">0%</div></div>
+  <div class="card"><div class="stat-label">W / L / B/E</div><div class="stat-value">0 / 1 / 0</div></div>
+  <div class="card"><div class="stat-label">AVG RR</div><div class="stat-value">2.00</div></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<table class="table">
+<thead>
+<tr>
+<th>INSTRUMENT</th>
+<th>DIRECTION</th>
+<th>SESSION</th>
+<th>P&L</th>
+<th>RR</th>
+<th>RESULT</th>
+<th>ACTION</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><b>EURUSD</b></td>
+<td><span class="badge">SELL</span></td>
+<td>London</td>
+<td class="loss">-$116</td>
+<td>2.00R</td>
+<td class="loss">Loss</td>
+<td><button class="btn" onclick="alert('Edit trade')">Edit</button> <button class="btn" onclick="alert('Delete trade')">Del</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</section>
+
+
+<!-- ANALYTICS -->
+<section id="analytics" class="content page hidden">
+
+<div class="section-head">
+<h2>Analytics</h2><span>Performance intelligence</span>
+</div>
+
+<div class="grid stats">
+<div class="card"><div class="stat-label">TOTAL</div><div class="stat-value">1</div></div>
+<div class="card"><div class="stat-label">WINS</div><div class="stat-value green">0</div></div>
+<div class="card"><div class="stat-label">LOSSES</div><div class="stat-value red">1</div></div>
+<div class="card"><div class="stat-label">B/E</div><div class="stat-value">0</div></div>
+<div class="card"><div class="stat-label">CONSISTENCY</div><div class="stat-value">35%</div></div>
+</div>
+
+<div class="grid two">
+<div class="card">
+<div class="section-head"><h2>Tag Performance</h2><span>P&L / Win Rate</span></div>
+<table class="table">
+<tr><th>TAG</th><th>P&L</th><th>WR</th></tr>
+<tr><td>Bad timing</td><td class="loss">-$116</td><td>0%</td></tr>
+</table>
+</div>
+
+<div class="card">
+<div class="section-head"><h2>Mistake Tags</h2><span>Impact</span></div>
+<div style="padding-top:15px">
+<div class="stat-label">BAD TIMING</div>
+<div class="stat-value red">-$116</div>
+<div class="stat-bottom">Win rate: 0%</div>
+</div>
+</div>
+</div>
+
+<div class="grid three">
+<div class="card"><div class="section-head"><h2>Session Performance</h2></div><div class="stat-value">London</div><div class="stat-bottom">-$116 · 0% WR</div></div>
+<div class="card"><div class="section-head"><h2>Instrument</h2></div><div class="stat-value">EURUSD</div><div class="stat-bottom">1 trade · -$116</div></div>
+<div class="card"><div class="section-head"><h2>Equity</h2></div><div class="stat-value red">-$116</div><div class="stat-bottom">Current drawdown</div></div>
+</div>
+
+</section>
+
+
+<!-- CALENDAR -->
+<section id="calendar" class="content page hidden">
+
+<div class="section-head">
+<h2>Calendar</h2>
+<div class="segment">
+<button class="active">Monthly</button>
+<button>Weekly</button>
+<button>Daily</button>
+</div>
+</div>
+
+<div class="calendar">
+
+<div class="card">
+<h2 style="font-size:15px">September 2026</h2>
+
+<div class="calendar-box">
+<div class="day-name">MON</div><div class="day-name">TUE</div><div class="day-name">WED</div><div class="day-name">THU</div><div class="day-name">FRI</div><div class="day-name">SAT</div><div class="day-name">SUN</div>
+
+<div class="day"></div><div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div>
+<div class="day">7</div><div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div>
+<div class="day loss-day"><strong>13</strong><small>-$116</small></div>
+<div class="day">14</div><div class="day">15</div><div class="day">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div><div class="day">20</div>
+</div>
+</div>
+
+<div class="card">
+<h2 style="font-size:14px">13–19 September</h2>
+<div style="margin-top:25px">
+<div class="stat-label">WEEKLY P&L</div>
+<div class="stat-value red">-$116</div>
+<div class="stat-bottom">0% win rate · 1 trade</div>
+</div>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:14px">
+<div class="section-head"><h2>Activity Heatmap</h2><span>Trading activity</span></div>
+<div class="heatmap">
+<script>
+for(let i=0;i<84;i++){
+document.write(`<div class="heat ${i===62?'c':i%9===0?'b':''}"></div>`);
+}
+</script>
+</div>
+</div>
+
+</section>
+
+
+<!-- PSYCHOLOGY -->
+<section id="psychology" class="content page hidden">
+
+<div class="section-head"><h2>Psychology</h2><span>Mindset & execution</span></div>
+
+<div class="grid two">
+<div class="card">
+<div class="section-head"><h2>Win Rate by Emotion</h2></div>
+<div class="stat-label">NEUTRAL</div>
+<div class="stat-value">0%</div>
+<div class="progress"><i style="width:3%"></i></div>
+</div>
+
+<div class="card">
+<div class="section-head"><h2>Mistakes</h2></div>
+<div class="stat-label">MOST RECORDED</div>
+<div class="stat-value">Bad timing</div>
+<div class="stat-bottom red">-$116 impact</div>
+</div>
+</div>
+
+</section>
+
+
+<!-- INSIGHTS -->
+<section id="insights" class="content page hidden">
+
+<div class="section-head"><h2>Insights</h2><span>Generated from your journal</span></div>
+
+<div class="card">
+<div style="font-size:25px;margin-bottom:12px">✦</div>
+<h2 style="font-size:15px">Your biggest recorded mistake</h2>
+<p style="color:#858e99;font-size:12px;line-height:1.7;margin-top:10px">
+Bad timing is currently responsible for the recorded loss. Continue tagging execution mistakes to build stronger statistical insights.
+</p>
+</div>
+
+<div class="grid three">
+<div class="card"><div class="stat-label">SESSION</div><div class="stat-value">London</div><div class="stat-bottom">1 recorded trade</div></div>
+<div class="card"><div class="stat-label">INSTRUMENT</div><div class="stat-value">EURUSD</div><div class="stat-bottom">-$116 P&L</div></div>
+<div class="card"><div class="stat-label">RECOVERY</div><div class="stat-value">0%</div><div class="stat-bottom">Needs more data</div></div>
+</div>
+
+</section>
+
+
+<!-- NEWS -->
+<section id="news" class="content page hidden">
+
+<div class="section-head"><h2>News & Economic Calendar</h2><span>Market context</span></div>
+
+<div class="grid three">
+<div class="card"><div class="stat-label">ECONOMIC CALENDAR</div><div class="stat-value">Events</div><div class="stat-bottom">High-impact events will appear here.</div></div>
+<div class="card"><div class="stat-label">BANK HOLIDAYS</div><div class="stat-value">Calendar</div><div class="stat-bottom">Track potential session impact.</div></div>
+<div class="card"><div class="stat-label">IMPACT ANALYSIS</div><div class="stat-value">AI</div><div class="stat-bottom">Connected later to live data.</div></div>
+</div>
+
+</section>
+
+
+<!-- RULES -->
+<section id="rules" class="content page hidden">
+
+<div class="section-head"><h2>Trading Rules</h2><span>Discipline center</span></div>
+
+<div class="card">
+<div class="section-head">
+<h2>My Rules</h2>
+<button class="btn primary">+ Add Rule</button>
+</div>
+
+<div style="display:grid;gap:10px">
+<div class="card">✓ Only trade confirmed setups</div>
+<div class="card">✓ Respect planned risk</div>
+<div class="card">✓ No revenge trading</div>
+</div>
+</div>
+
+</section>
+
+
+<!-- SETTINGS -->
+<section id="settings" class="content page hidden">
+
+<div class="section-head"><h2>Settings & Account</h2><span>Personal preferences</span></div>
+
+<div class="card form">
+
+<div class="field">
+<label>DISPLAY NAME</label>
+<input value="Mriganka Saikia">
+</div>
+
+<div class="field">
+<label>STARTING BALANCE ($)</label>
+<input type="number" value="10000">
+</div>
+
+<div class="field">
+<label>BREAKEVEN CAP ($)</label>
+<div class="segment">
+<button>$0</button>
+<button>$10</button>
+<button class="active">$20</button>
+<button>$35</button>
+<button>$50</button>
+</div>
+</div>
+
+<div class="field">
+<label>RATING STYLE</label>
+<div class="segment">
+<button class="active">Stars</button>
+<button>A+ Grades</button>
+</div>
+</div>
+
+<div class="field">
+<label>THEME</label>
+<div class="segment">
+<button class="active">Dark</button>
+<button>Light</button>
+</div>
+</div>
+
+<div style="display:flex;gap:8px">
+<button class="btn">Cancel</button>
+<button class="btn primary">Save Changes</button>
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+<script>
+function showPage(id,button){
+
+  document.querySelectorAll('.page').forEach(page=>{
+    page.classList.add('hidden');
+  });
+
+  document.getElementById(id).classList.remove('hidden');
+
+  document.querySelectorAll('.nav button').forEach(btn=>{
+    btn.classList.remove('active');
+  });
+
+  if(button) button.classList.add('active');
+
+  const titles={
+    dashboard:'Dashboard',
+    trades:'Trade Log',
+    analytics:'Analytics',
+    calendar:'Calendar',
+    psychology:'Psychology',
+    insights:'Insights',
+    news:'News',
+    rules:'Trading Rules',
+    settings:'Settings & Account'
+  };
+
+  document.getElementById('pageTitle').textContent=titles[id];
+  window.scrollTo(0,0);
+}
+
+function logout(){
+  alert('Logout will be connected to Supabase Authentication.');
+}
+</script>
+
+</body>
+</html>
