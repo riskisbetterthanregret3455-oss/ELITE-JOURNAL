@@ -1157,6 +1157,63 @@ function updateTradeStats(){
 }
 loadTrades();
 updateTradeStats();
+  function updateDashboard(){
+  const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
+
+  const total = trades.length;
+  const wins = trades.filter(t => t.result === 'Win').length;
+  const losses = trades.filter(t => t.result === 'Loss').length;
+
+  const pnl = trades.reduce((sum,t) => sum + Number(t.pnl || 0), 0);
+
+  const grossProfit = trades
+    .filter(t => Number(t.pnl) > 0)
+    .reduce((sum,t) => sum + Number(t.pnl), 0);
+
+  const grossLoss = Math.abs(
+    trades
+      .filter(t => Number(t.pnl) < 0)
+      .reduce((sum,t) => sum + Number(t.pnl), 0)
+  );
+
+  const winRate = total ? (wins / total) * 100 : 0;
+  const profitFactor = grossLoss ? grossProfit / grossLoss : 0;
+
+  const avgWin = wins
+    ? trades.filter(t => t.result === 'Win')
+        .reduce((sum,t) => sum + Number(t.pnl), 0) / wins
+    : 0;
+
+  const avgLoss = losses
+    ? trades.filter(t => t.result === 'Loss')
+        .reduce((sum,t) => sum + Number(t.pnl), 0) / losses
+    : 0;
+
+  const cards = document.querySelectorAll('#dashboard .stats .card');
+
+  if(!cards.length) return;
+
+  cards[0].querySelector('.stat-value').textContent =
+    `${pnl >= 0 ? '$' : '-$'}${Math.abs(pnl).toFixed(2)}`;
+  cards[0].querySelector('.stat-bottom').textContent =
+    `${total} trade${total === 1 ? '' : 's'}`;
+
+  cards[1].querySelector('.stat-value').textContent =
+    `${winRate.toFixed(0)}%`;
+  cards[1].querySelector('.stat-bottom').textContent =
+    `${wins} wins / ${losses} loss${losses === 1 ? '' : 'es'}`;
+
+  cards[2].querySelector('.stat-value').textContent =
+    profitFactor.toFixed(2);
+
+  cards[3].querySelector('.stat-value').textContent =
+    `${winRate.toFixed(0)}%`;
+
+  cards[4].querySelector('.stat-value').textContent =
+    `$${avgWin.toFixed(0)} / $${avgLoss.toFixed(0)}`;
+}
+
+updateDashboard();
 </script>
 
 </body>
