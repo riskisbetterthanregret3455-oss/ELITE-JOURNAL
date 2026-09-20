@@ -1089,6 +1089,39 @@ function saveTrade(){
   closeTradeForm();
   alert('Trade saved successfully!');
 }
+  function loadTrades(){
+  const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
+  const table = document.getElementById('tradeTableBody');
+
+  if(!table) return;
+
+  table.innerHTML = '';
+
+  trades.forEach((trade, index) => {
+    const pnlClass = trade.pnl >= 0 ? 'green' : 'loss';
+    const resultClass = trade.result === 'Loss' ? 'loss' : 'green';
+
+    table.innerHTML += `
+      <tr>
+        <td><b>${trade.instrument}</b></td>
+        <td><span class="badge">${trade.direction}</span></td>
+        <td>${trade.session}</td>
+        <td class="${pnlClass}">$${trade.pnl}</td>
+        <td>${trade.rr.toFixed(2)}R</td>
+        <td class="${resultClass}">${trade.result}</td>
+        <td><button class="btn" onclick="deleteTrade(${index})">Del</button></td>
+      </tr>
+    `;
+  });
+}
+ function deleteTrade(index){
+  const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
+  trades.splice(index, 1);
+  localStorage.setItem('eliteTrades', JSON.stringify(trades));
+  loadTrades();
+}
+
+loadTrades();
 </script>
 
 </body>
