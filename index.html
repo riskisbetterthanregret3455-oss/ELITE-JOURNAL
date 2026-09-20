@@ -1358,7 +1358,7 @@ updateDailyPnlChart();
     }
 
     html += `
-      <div style="min-height:52px;background:${bg};border-radius:7px;padding:7px;color:${text};">
+      <div style="min-height:58px;background:${bg};border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:8px;color:${text};transition:.2s;">
         <div style="font-weight:600">${day}</div>
         <div style="font-size:10px;margin-top:5px">
           ${dayTrades.length ? (pnl >= 0 ? '+' : '-') + '$' + Math.abs(pnl).toFixed(0) : '—'}
