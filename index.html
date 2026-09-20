@@ -1266,6 +1266,39 @@ function updateCumulativeChart(){
 
   line.setAttribute('points', points);
 }
+  function updateDailyPnlChart(){
+  const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
+  const chart = document.getElementById('dailyPnlChart');
+
+  if(!chart) return;
+
+  chart.innerHTML = '';
+
+  if(!trades.length) return;
+
+  const daily = {};
+
+  trades.forEach(trade => {
+    const date = trade.date || 'Unknown';
+    daily[date] = (daily[date] || 0) + Number(trade.pnl || 0);
+  });
+
+  Object.values(daily).forEach((pnl, index) => {
+    const bar = document.createElement('div');
+
+    bar.style.position = 'absolute';
+    bar.style.left = `${8 + index * 15}%`;
+    bar.style.bottom = pnl >= 0 ? '30px' : `${30 + Math.abs(pnl) / 20}px`;
+    bar.style.width = '10%';
+    bar.style.height = `${Math.max(8, Math.min(Math.abs(pnl) / 20, 100))}px`;
+    bar.style.background = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    bar.style.borderRadius = '5px 5px 0 0';
+
+    chart.appendChild(bar);
+  });
+}
+
+updateDailyPnlChart();
 </script>
 
 </body>
