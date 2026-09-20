@@ -1192,7 +1192,8 @@ updateTradeStats();
   const cards = document.querySelectorAll('#dashboard .stats .card');
 
   if(!cards.length) return;
-
+  cards[0].querySelector('.stat-value').textContent =
+  `${pnl >= 0 ? '$' : '-$'}${Math.abs(pnl).toFixed(2)}`;
   cards[0].querySelector('.stat-value').className =
   `stat-value ${pnl >= 0 ? 'green' : 'red'}`;
   cards[0].querySelector('.stat-bottom').textContent =
