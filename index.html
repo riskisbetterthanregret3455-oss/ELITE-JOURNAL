@@ -1423,6 +1423,225 @@ html = `
 }
 
 updateDashboardCalendar();
+  function updateMainCalendar(){
+
+  const calendar = document.getElementById('mainCalendar');
+  const heatmap = document.getElementById('calendarHeatmap');
+
+  if(!calendar) return;
+
+  const trades = JSON.parse(
+    localStorage.getItem('eliteTrades') || '[]'
+  );
+
+  const year = 2026;
+  const month = 8; // September
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  let html = '';
+
+  // Monday first
+  const mondayFirst = firstDay === 0 ? 6 : firstDay - 1;
+
+  const days = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+
+  days.forEach(day => {
+    html += `
+      <div class="day-name">${day}</div>
+    `;
+  });
+
+  // Empty spaces before September 1
+  for(let i = 0; i < mondayFirst; i++){
+    html += `<div></div>`;
+  }
+
+  // Calendar days
+  for(let day = 1; day <= daysInMonth; day++){
+
+    const dayTrades = trades.filter(trade => {
+
+      if(!trade.date) return false;
+
+      const date = new Date(trade.date);
+
+      return (
+        date.getFullYear() === year &&
+        date.getMonth() === month &&
+        date.getDate() === day
+      );
+    });
+
+    const pnl = dayTrades.reduce(
+      (sum, trade) => sum + Number(trade.pnl || 0),
+      0
+    );
+
+    let extraClass = '';
+    let resultText = '';
+
+    if(dayTrades.length){
+
+      if(pnl > 0){
+        extraClass = 'profit-day';
+        resultText = `+$${pnl.toFixed(0)}`;
+      }
+      else if(pnl < 0){
+        extraClass = 'loss-day';
+        resultText = `-$${Math.abs(pnl).toFixed(0)}`;
+      }
+      else{
+        resultText = '$0';
+      }
+    }
+
+    html += `
+      <div class="day ${extraClass}">
+        <strong>${day}</strong>
+        ${
+          dayTrades.length
+          ? `<small>${resultText}</small>`
+          : ''
+        }
+      </div>
+    `;
+  }
+
+  calendar.innerHTML = html;
+
+
+  // -------------------------
+  // WEEKLY SUMMARY
+  // -------------------------
+
+  const weeklyTrades = trades.filter(trade => {
+
+    if(!trade.date) return false;
+
+    const date = new Date(trade.date);
+
+    return (
+      date.getFullYear() === 2026 &&
+      date.getMonth() === 8 &&
+      date.getDate() >= 13 &&
+      date.getDate() <= 19
+    );
+  });
+
+  const weeklyPnl = weeklyTrades.reduce(
+    (sum, trade) => sum + Number(trade.pnl || 0),
+    0
+  );
+
+  const weeklyWins = weeklyTrades.filter(
+    trade => trade.result === 'Win'
+  ).length;
+
+  const weeklyLosses = weeklyTrades.filter(
+    trade => trade.result === 'Loss'
+  ).length;
+
+  const weeklyWinRate = weeklyTrades.length
+    ? (weeklyWins / weeklyTrades.length) * 100
+    : 0;
+
+
+  const weeklyPnlEl =
+    document.getElementById('calendarWeeklyPnl');
+
+  const weeklyStatsEl =
+    document.getElementById('calendarWeeklyStats');
+
+  const weeklyTradesEl =
+    document.getElementById('calendarWeeklyTrades');
+
+  const weeklyWLEl =
+    document.getElementById('calendarWeeklyWL');
+
+
+  if(weeklyPnlEl){
+
+    weeklyPnlEl.textContent =
+      `${weeklyPnl >= 0 ? '$' : '-$'}${Math.abs(weeklyPnl).toFixed(0)}`;
+
+    weeklyPnlEl.className =
+      `stat-value ${weeklyPnl >= 0 ? 'green' : 'red'}`;
+  }
+
+  if(weeklyStatsEl){
+
+    weeklyStatsEl.textContent =
+      `${weeklyWinRate.toFixed(0)}% win rate · ${weeklyTrades.length} trade${weeklyTrades.length === 1 ? '' : 's'}`;
+  }
+
+  if(weeklyTradesEl){
+    weeklyTradesEl.textContent = weeklyTrades.length;
+  }
+
+  if(weeklyWLEl){
+    weeklyWLEl.textContent =
+      `${weeklyWins} / ${weeklyLosses}`;
+  }
+
+
+  // -------------------------
+  // ACTIVITY HEATMAP
+  // -------------------------
+
+  if(heatmap){
+
+    heatmap.innerHTML = '';
+
+    for(let i = 0; i < 84; i++){
+
+      const tradeIndex = i % daysInMonth;
+      const day = tradeIndex + 1;
+
+      const dayTrades = trades.filter(trade => {
+
+        if(!trade.date) return false;
+
+        const date = new Date(trade.date);
+
+        return (
+          date.getFullYear() === year &&
+          date.getMonth() === month &&
+          date.getDate() === day
+        );
+      });
+
+      const box = document.createElement('div');
+
+      box.className = 'heat';
+
+      if(dayTrades.length){
+        box.classList.add('a');
+      }
+
+      if(
+        dayTrades.some(
+          trade => Number(trade.pnl || 0) < 0
+        )
+      ){
+        box.classList.add('b');
+      }
+
+      if(
+        dayTrades.some(
+          trade => Number(trade.pnl || 0) > 0
+        )
+      ){
+        box.classList.add('c');
+      }
+
+      heatmap.appendChild(box);
+    }
+  }
+}
+
+updateMainCalendar();
 </script>
 
 </body>
