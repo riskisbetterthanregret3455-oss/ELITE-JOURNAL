@@ -1114,7 +1114,8 @@ function saveTrade(){
     `;
   });
 }
- function deleteTrade(index){
+
+function deleteTrade(index){
   const trades = JSON.parse(localStorage.getItem('eliteTrades') || '[]');
   trades.splice(index, 1);
   localStorage.setItem('eliteTrades', JSON.stringify(trades));
